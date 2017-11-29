@@ -8,12 +8,12 @@ namespace TransformationsInSpace
 {
     public class Point
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public int Z { get; private set; }
-        public int W { get; private set; }
+        public double X { get; private set; }
+        public double Y { get; private set; }
+        public double Z { get; private set; }
+        public double W { get; private set; }
 
-        public Point (int x, int y, int z)
+        public Point (double x, double y, double z)
         {
             X = x;
             Y = y;
