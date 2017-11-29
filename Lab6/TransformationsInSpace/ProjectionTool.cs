@@ -57,7 +57,7 @@ namespace TransformationsInSpace
             {
                 for (int j = 0; j < result.GetLength(1); j++)
                 {
-                    for (int k = 0; k < a.GetLength(0); ++k)
+                    for (int k = 0; k < a.GetLength(1); ++k)
                     {
                         result[i, j] += a[i, k] * b[k, j];
                     }
@@ -81,13 +81,13 @@ namespace TransformationsInSpace
             return result;
         }
 
-        public static System.Drawing.Point[] ToPoints(double[,] points)
+        public static System.Drawing.Point[] ToPoints(double[,] points, double scale, int centerX, int centerY)
         {
-            var result = new System.Drawing.Point[points.Length];
+            var result = new System.Drawing.Point[points.GetLength(0)];
 
             for (int i = 0; i < result.GetLength(0); i++)
             {
-                result[i] = new System.Drawing.Point((int)points[i,0], (int)points[i, 1]);
+                result[i] = new System.Drawing.Point((int)(points[i,0]*scale) + centerX, (int)(points[i, 1] * scale) + centerY);
             }
 
             return result;

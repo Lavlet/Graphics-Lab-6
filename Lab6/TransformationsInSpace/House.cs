@@ -25,7 +25,7 @@ namespace TransformationsInSpace
             var points = ProjectionTool.ToArray(_house);
             var projection = ProjectionTool.Kavalie(points, 1, 4);
 
-            return ProjectionTool.ToPoints(projection);
+            return ProjectionTool.ToPoints(projection, scale, centerX, centerY);
         }
     }
 }
