@@ -103,5 +103,11 @@ namespace TransformationsInSpace
             ProjectionTool.Rotate(_house, hScrollBar6.Value, 2);
             panel1.Invalidate();
         }
+
+        private void hScrollBar7_Scroll(object sender, ScrollEventArgs e)
+        {
+            ProjectionTool.Scale(_house, hScrollBar7.Value/10.0);
+            panel1.Invalidate();
+        }
     }
 }

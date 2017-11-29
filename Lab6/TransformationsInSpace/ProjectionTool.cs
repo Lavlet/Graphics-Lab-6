@@ -20,6 +20,10 @@ namespace TransformationsInSpace
             new Point(1, 1, 1)
         };
 
+        private static double[] _previousMoveValues = new double[] { 0, 0, 0 };
+        private static int[] previousAngle = new int[] { 0, 0, 0};
+        private static double previousScale = 1.0;
+
         public static double[,] Kavalie(double[,] points, int f, double angle)
         {
             double a = f * Math.Cos(angle);
@@ -47,23 +51,25 @@ namespace TransformationsInSpace
             return result;
         }
 
-        public static void Move(House house, double delta, int axis)
+        public static void Move(House house, double newValue, int axis)
         {
             var box = ToArray(house.Box);
-            var initialBox = ToArray(_box);
+            double delta = newValue - _previousMoveValues[axis];
 
             for (int i = 0; i < box.GetLength(0); i++)
             {
-                box[i, axis] = initialBox[i, axis] + delta / 50; //MustBeVariable
+                box[i, axis] += delta / 50; //MustBeVariable
             }
 
             house.Box = ToPoints(box);
+            _previousMoveValues[axis] = newValue;
         }
 
-        public static void Rotate(House house, double angle, int axis)
+        public static void Rotate(House house, int newAngle, int axis)
         {
-            angle = angle / 180 * Math.PI;
-            var initialBox = ToArray(_box);
+            double deltaAngle = (newAngle - previousAngle[axis]) / 180.0 * Math.PI;
+            var box = ToArray(house.Box);
+
             double[,] transform = new double[1,1];
 
             switch (axis)
@@ -72,47 +78,46 @@ namespace TransformationsInSpace
                     transform = new double[,]
             {
                 {1, 0, 0 },
-                {0, Math.Cos(angle), Math.Sin(angle)},
-                {0, -Math.Sin(angle), Math.Cos(angle) }
+                {0, Math.Cos(deltaAngle), Math.Sin(deltaAngle)},
+                {0, -Math.Sin(deltaAngle), Math.Cos(deltaAngle) }
             };
                     break;
                 case 1:
                     transform = new double[,]
             {
-                {Math.Cos(angle), 0, Math.Sin(angle) },
+                {Math.Cos(deltaAngle), 0, Math.Sin(deltaAngle) },
                 {0, 1, 0},
-                {-Math.Sin(angle), 0, Math.Cos(angle) }
+                {-Math.Sin(deltaAngle), 0, Math.Cos(deltaAngle) }
             };
                     break;
                 case 2:
                     transform = new double[,]
             {
-                {Math.Cos(angle), Math.Sin(angle), 0 },
-                {-Math.Sin(angle), Math.Cos(angle), 0 },
+                {Math.Cos(deltaAngle), Math.Sin(deltaAngle), 0 },
+                {-Math.Sin(deltaAngle), Math.Cos(deltaAngle), 0 },
                 {0, 0, 1 }
             };
                     break;
             }
 
-            house.Box = ToPoints(MultiplyMatrices(initialBox, transform));
-        }
+            previousAngle[axis] = newAngle;
+            house.Box = ToPoints(MultiplyMatrices(box, transform));
+        }        
 
-        public static double[,] MultiplyMatrices(double[,] a, double[,] b)
+        public static void Scale(House house, double newScale)
         {
-            double[,] result = new double[a.GetLength(0), b.GetLength(1)];
+            var box = ToArray(house.Box);
+            double deltaScale = newScale / previousScale;
 
-            for (int i = 0; i < result.GetLength(0); i++)
+            for (int i = 0; i < box.GetLength(0); i++)
             {
-                for (int j = 0; j < result.GetLength(1); j++)
-                {
-                    for (int k = 0; k < a.GetLength(1); ++k)
-                    {
-                        result[i, j] += a[i, k] * b[k, j];
-                    }
-                }
+                box[i, 0] *= deltaScale; //MustBeVariable
+                box[i, 1] *= deltaScale;
+                box[i, 2] *= deltaScale;
             }
 
-            return result;
+            house.Box = ToPoints(box);
+            previousScale = newScale;
         }
 
         public static double[,] ToArray(Point[] points)
@@ -148,6 +153,24 @@ namespace TransformationsInSpace
             for (int i = 0; i < result.GetLength(0); i++)
             {
                 result[i] = new System.Drawing.Point((int)(points[i, 0] * scale) + centerX, (int)(points[i, 1] * scale) + centerY);
+            }
+
+            return result;
+        }
+
+        public static double[,] MultiplyMatrices(double[,] a, double[,] b)
+        {
+            double[,] result = new double[a.GetLength(0), b.GetLength(1)];
+
+            for (int i = 0; i < result.GetLength(0); i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    for (int k = 0; k < a.GetLength(1); ++k)
+                    {
+                        result[i, j] += a[i, k] * b[k, j];
+                    }
+                }
             }
 
             return result;

@@ -36,6 +36,7 @@
             this.hScrollBar4 = new System.Windows.Forms.HScrollBar();
             this.hScrollBar5 = new System.Windows.Forms.HScrollBar();
             this.hScrollBar6 = new System.Windows.Forms.HScrollBar();
+            this.hScrollBar7 = new System.Windows.Forms.HScrollBar();
             this.SuspendLayout();
             // 
             // panel1
@@ -104,11 +105,23 @@
             this.hScrollBar6.TabIndex = 7;
             this.hScrollBar6.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar6_Scroll);
             // 
+            // hScrollBar7
+            // 
+            this.hScrollBar7.LargeChange = 1;
+            this.hScrollBar7.Location = new System.Drawing.Point(573, 289);
+            this.hScrollBar7.Maximum = 50;
+            this.hScrollBar7.Name = "hScrollBar7";
+            this.hScrollBar7.Size = new System.Drawing.Size(151, 22);
+            this.hScrollBar7.TabIndex = 8;
+            this.hScrollBar7.Value = 10;
+            this.hScrollBar7.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar7_Scroll);
+            // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 582);
+            this.Controls.Add(this.hScrollBar7);
             this.Controls.Add(this.hScrollBar6);
             this.Controls.Add(this.hScrollBar5);
             this.Controls.Add(this.hScrollBar4);
@@ -134,5 +147,6 @@
         private System.Windows.Forms.HScrollBar hScrollBar4;
         private System.Windows.Forms.HScrollBar hScrollBar5;
         private System.Windows.Forms.HScrollBar hScrollBar6;
+        private System.Windows.Forms.HScrollBar hScrollBar7;
     }
 }
