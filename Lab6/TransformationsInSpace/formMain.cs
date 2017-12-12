@@ -13,15 +13,23 @@ namespace TransformationsInSpace
     public partial class formMain : Form
     {
         private House _house = new House();
+        private List<Label> debug = new List<Label>();
 
         public formMain()
         {
             InitializeComponent();
+            debug.Add(label2);
+            debug.Add(label3);
+            debug.Add(label4);
+            debug.Add(label5);
+            debug.Add(label6);
+            debug.Add(label7);
+            debug.Add(label8);
+            debug.Add(label9);
         }
 
         private void btnDraw_Click(object sender, EventArgs e)
         {
-
             panel1.Invalidate();
         }
 
@@ -30,25 +38,48 @@ namespace TransformationsInSpace
             var grafics = e.Graphics;
             var pen = new Pen(Color.Black);
 
-            var points = _house.GetBox(50, panel1.Width / 2, panel1.Height / 2);
+            System.Drawing.Point invisible;
 
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 0, 2, 6, 4));
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 4, 5, 7, 6));
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 0, 1, 5, 4));
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 0, 1, 3, 2));
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 2, 3, 7, 6));
-            grafics.DrawPolygon(pen, ProjectionTool.GetPoints(points, 1, 5, 7, 3));
+            System.Drawing.Point[] pr;
+            var points = _house.GetBox(50, panel1.Width / 2, panel1.Height / 2, out invisible, debug);
+
+            var index = Array.IndexOf(points, invisible);
+            label1.Text = index.ToString();
+
+            var i = 0;
+            foreach (var point in points)
+            {
+                debug[i].Text = String.Format("X: {0} Y: {1} {2}", point.X, point.Y, debug[i].Text);
+                i++;
+            }
+
+            var planes = new List<List<int>>()
+            {
+                new List<int>() {0, 2, 6, 4},
+                new List<int>() {4, 5, 7, 6},
+                new List<int>() {2, 3, 7, 6},
+                new List<int>() {0, 1, 3, 2},
+                new List<int>() {0, 1, 5, 4},
+                new List<int>() {1, 5, 7, 3}
+            };
+
+            foreach (var plane in planes)
+            {
+                var draw = ProjectionTool.GetPoints(points, plane.ToArray());
+                //if (!draw.Contains(invisible))
+                    grafics.DrawPolygon(pen, draw);
+            }
         }
 
         private void formMain_Load(object sender, EventArgs e)
         {
-            IntializaMoveBar(hScrollBar1, panel1);
-            IntializaMoveBar(hScrollBar2, panel1);
-            IntializaMoveBar(hScrollBar3, panel1);
+            IntializaMoveBar(scrlbarMovementX, panel1);
+            IntializaMoveBar(scrlbarMovementY, panel1);
+            IntializaMoveBar(scrlbarMovementZ, panel1);
 
-            InitializaRotateBar(hScrollBar4);
-            InitializaRotateBar(hScrollBar5);
-            InitializaRotateBar(hScrollBar6);
+            InitializaRotateBar(scrlbarRotateX);
+            InitializaRotateBar(scrlbarRotateY);
+            InitializaRotateBar(scrlbarRotateZ);
         }
 
         private static void IntializaMoveBar(HScrollBar bar, Panel panel1)
@@ -66,47 +97,51 @@ namespace TransformationsInSpace
         }
 
         private void hScrollBar1_ValueChanged(object sender, EventArgs e)
-        {            
-            ProjectionTool.Move(_house, hScrollBar1.Value, 0);
+        {
+            ProjectionTool.Move(_house, scrlbarMovementX.Value, 0);
 
             panel1.Invalidate();
         }
 
-        private void hScrollBar2_Scroll(object sender, ScrollEventArgs e)
+        private void hScrollBar2_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Move(_house, hScrollBar2.Value, 1);
+            ProjectionTool.Move(_house, scrlbarMovementY.Value, 1);
 
             panel1.Invalidate();
         }
 
-        private void hScrollBar3_Scroll(object sender, ScrollEventArgs e)
+        private void hScrollBar3_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Move(_house, hScrollBar3.Value, 2);
+            ProjectionTool.Move(_house, scrlbarMovementZ.Value, 2);
 
             panel1.Invalidate();
         }
 
-        private void hScrollBar4_Scroll(object sender, ScrollEventArgs e)
+        private void scrlbarRotateX_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Rotate(_house, hScrollBar4.Value, 0);
+            ProjectionTool.Rotate(_house, scrlbarRotateX.Value, 0);
+
             panel1.Invalidate();
         }
 
-        private void hScrollBar5_Scroll(object sender, ScrollEventArgs e)
+        private void scrlbarRotateY_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Rotate(_house, hScrollBar5.Value, 1);
+            ProjectionTool.Rotate(_house, scrlbarRotateY.Value, 1);
+
             panel1.Invalidate();
         }
 
-        private void hScrollBar6_Scroll(object sender, ScrollEventArgs e)
+        private void scrlbarRotateZ_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Rotate(_house, hScrollBar6.Value, 2);
+            ProjectionTool.Rotate(_house, scrlbarRotateZ.Value, 2);
+
             panel1.Invalidate();
         }
 
-        private void hScrollBar7_Scroll(object sender, ScrollEventArgs e)
+        private void scrlbarScaling_ValueChanged(object sender, EventArgs e)
         {
-            ProjectionTool.Scale(_house, hScrollBar7.Value/10.0);
+            ProjectionTool.Scale(_house, scrlbarScaling.Value / 10.0);
+
             panel1.Invalidate();
         }
     }

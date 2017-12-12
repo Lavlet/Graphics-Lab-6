@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static TransformationsInSpace.GeometricTools;
 
 namespace TransformationsInSpace
 {
@@ -21,11 +19,14 @@ namespace TransformationsInSpace
         };
 
         private static double[] _previousMoveValues = new double[] { 0, 0, 0 };
-        private static int[] previousAngle = new int[] { 0, 0, 0};
+        private static int[] previousAngle = new int[] { 0, 0, 0 };
         private static double previousScale = 1.0;
 
-        public static double[,] Kavalie(double[,] points, int f, double angle)
+        // f = 1 - Kavalie, f = 0.5 - Kabine
+        public static double[,] Projection(double[,] points, double f, double angle)
         {
+            angle = angle / 180.0 * Math.PI;
+
             double a = f * Math.Cos(angle);
             double b = f * Math.Sin(angle);
 
@@ -58,7 +59,7 @@ namespace TransformationsInSpace
 
             for (int i = 0; i < box.GetLength(0); i++)
             {
-                box[i, axis] += delta / 50; //MustBeVariable
+                box[i, axis] += delta / 50; //Scale, MustBeVariable
             }
 
             house.Box = ToPoints(box);
@@ -70,7 +71,7 @@ namespace TransformationsInSpace
             double deltaAngle = (newAngle - previousAngle[axis]) / 180.0 * Math.PI;
             var box = ToArray(house.Box);
 
-            double[,] transform = new double[1,1];
+            double[,] transform = new double[1, 1];
 
             switch (axis)
             {
@@ -102,7 +103,7 @@ namespace TransformationsInSpace
 
             previousAngle[axis] = newAngle;
             house.Box = ToPoints(MultiplyMatrices(box, transform));
-        }        
+        }
 
         public static void Scale(House house, double newScale)
         {
@@ -174,6 +175,45 @@ namespace TransformationsInSpace
             }
 
             return result;
+        }
+
+
+
+        public static int FindInvisible(double[,] points, int scale, int centerX, int centerY, List<System.Windows.Forms.Label> debug)
+        {
+            var cameraPoint = new double[,] { { 5, 5, -4 } };
+            var projectedCameraPoint = ProjectionTool.Projection(cameraPoint, 1, 45);
+
+            var normal = new Point(1, 1, -1 );
+            var projectedNormal = ProjectionTool.Projection(cameraPoint, 1, 45);
+
+            var cameraPlain = new Plane(cameraPoint, normal);//new double[] { 1, 1, -1, -2 };
+
+            var testRes = new List<double>();
+            var soTest = ToJagged(points);
+
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[0], soTest[2], soTest[6])));
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[2], soTest[3], soTest[7])));
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[4], soTest[6], soTest[7])));
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[0], soTest[1], soTest[5])));
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[1], soTest[3], soTest[7])));
+            testRes.Add(IsVisible(cameraPoint, new Plane(soTest[0], soTest[2], soTest[3])));
+
+            int maxDistanceIndex = 0;
+            double maxDistance = 0;
+            for (int i = 0; i < points.GetLength(0); i++)
+            {
+                var currentPoint = new Point(points[i, 0], points[i, 1], points[i, 2]);
+                var distance = PlaneDotDistance(currentPoint, cameraPlain);
+                debug[i].Text = String.Format("Distance {0}", distance);
+                if (distance > maxDistance)
+                {
+                    maxDistanceIndex = i;
+                    maxDistance = distance;
+                }
+            }
+
+            return maxDistanceIndex;
         }
     }
 }

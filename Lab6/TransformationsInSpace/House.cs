@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TransformationsInSpace
 {
@@ -33,12 +29,45 @@ namespace TransformationsInSpace
         }
 
 
-        public System.Drawing.Point[] GetBox(int scale, int centerX, int centerY)
-        {
+        public System.Drawing.Point[] GetBox(int scale, int centerX, int centerY, out System.Drawing.Point invisible, List<System.Windows.Forms.Label> debug)
+        {           
             var points = ProjectionTool.ToArray(_box);
-            var projection = ProjectionTool.Kavalie(points, 1, 4);
+            var projection = ProjectionTool.Projection(points, 1, 45);
 
-            return ProjectionTool.ToPoints(projection, scale, centerX, centerY);
+            int invisibleIndex = ProjectionTool.FindInvisible(points, scale, centerX, centerY, debug);
+
+            switch (invisibleIndex)
+            {
+                case 0:
+                    invisibleIndex = 2;
+                    break;
+                case 1:
+                    invisibleIndex = 3;
+                    break;
+                case 2:
+                    invisibleIndex = 0;
+                    break;
+                case 3:
+                    invisibleIndex = 1;
+                    break;
+                case 4:
+                    invisibleIndex = 6;
+                    break;
+                case 5:
+                    invisibleIndex = 7;
+                    break;
+                case 6:
+                    invisibleIndex = 4;
+                    break;
+                case 7:
+                    invisibleIndex = 5;
+                    break;
+            }
+
+            var result = ProjectionTool.ToPoints(projection, scale, centerX, centerY);
+            invisible = result[invisibleIndex];
+
+            return result;
         }
     }
 }
