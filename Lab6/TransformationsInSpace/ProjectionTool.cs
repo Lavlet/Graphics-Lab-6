@@ -6,18 +6,6 @@ namespace TransformationsInSpace
 {
     class ProjectionTool
     {
-        private static Point[] _box = new Point[]
-        {
-            new Point(0, 0, 0),
-            new Point(0, 0, 1),
-            new Point(0, 1, 0),
-            new Point(0, 1, 1),
-            new Point(1, 0, 0),
-            new Point(1, 0, 1),
-            new Point(1, 1, 0),
-            new Point(1, 1, 1)
-        };
-
         private static double[] _previousMoveValues = new double[] { 0, 0, 0 };
         private static int[] previousAngle = new int[] { 0, 0, 0 };
         private static double previousScale = 1.0;
@@ -177,14 +165,12 @@ namespace TransformationsInSpace
             return result;
         }
 
-
-
-        public static int FindInvisible(double[,] points, int scale, int centerX, int centerY, List<System.Windows.Forms.Label> debug)
+        public static int FindInvisible(double[,] points, List<System.Windows.Forms.Label> debug)
         {
-            var cameraPoint = new double[,] { { 5, 5, -4 } };
+            var cameraPoint = new double[,] { { 4, 4, -5 } };
             var projectedCameraPoint = ProjectionTool.Projection(cameraPoint, 1, 45);
 
-            var normal = new Point(1, 1, -1 );
+            var normal = new Point(1, 1, -1);
             var projectedNormal = ProjectionTool.Projection(cameraPoint, 1, 45);
 
             var cameraPlain = new Plane(cameraPoint, normal);//new double[] { 1, 1, -1, -2 };
@@ -205,7 +191,8 @@ namespace TransformationsInSpace
             {
                 var currentPoint = new Point(points[i, 0], points[i, 1], points[i, 2]);
                 var distance = PlaneDotDistance(currentPoint, cameraPlain);
-                debug[i].Text = String.Format("Distance {0}", distance);
+                if (i < debug.Count)
+                    debug[i].Text = String.Format("Distance {0}", distance);
                 if (distance > maxDistance)
                 {
                     maxDistanceIndex = i;

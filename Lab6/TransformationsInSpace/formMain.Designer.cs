@@ -54,8 +54,12 @@
             this.scrlbarRotateY = new System.Windows.Forms.HScrollBar();
             this.scrlbarRotateX = new System.Windows.Forms.HScrollBar();
             this.label13 = new System.Windows.Forms.Label();
+            this.grpbxProjection = new System.Windows.Forms.GroupBox();
+            this.rdbtnKavalie = new System.Windows.Forms.RadioButton();
+            this.rdbtnKabine = new System.Windows.Forms.RadioButton();
             this.grpbxMovement.SuspendLayout();
             this.grpbxRotating.SuspendLayout();
+            this.grpbxProjection.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -300,11 +304,46 @@
             this.label13.TabIndex = 19;
             this.label13.Text = "Scaling";
             // 
+            // grpbxProjection
+            // 
+            this.grpbxProjection.Controls.Add(this.rdbtnKabine);
+            this.grpbxProjection.Controls.Add(this.rdbtnKavalie);
+            this.grpbxProjection.Location = new System.Drawing.Point(579, 358);
+            this.grpbxProjection.Name = "grpbxProjection";
+            this.grpbxProjection.Size = new System.Drawing.Size(207, 83);
+            this.grpbxProjection.TabIndex = 20;
+            this.grpbxProjection.TabStop = false;
+            this.grpbxProjection.Text = "Projection type";
+            // 
+            // rdbtnKavalie
+            // 
+            this.rdbtnKavalie.AutoSize = true;
+            this.rdbtnKavalie.Checked = true;
+            this.rdbtnKavalie.Location = new System.Drawing.Point(15, 30);
+            this.rdbtnKavalie.Name = "rdbtnKavalie";
+            this.rdbtnKavalie.Size = new System.Drawing.Size(60, 17);
+            this.rdbtnKavalie.TabIndex = 0;
+            this.rdbtnKavalie.TabStop = true;
+            this.rdbtnKavalie.Text = "Kavalie";
+            this.rdbtnKavalie.UseVisualStyleBackColor = true;
+            this.rdbtnKavalie.CheckedChanged += new System.EventHandler(this.rdbtnKavalie_CheckedChanged);
+            // 
+            // rdbtnKabine
+            // 
+            this.rdbtnKabine.AutoSize = true;
+            this.rdbtnKabine.Location = new System.Drawing.Point(15, 53);
+            this.rdbtnKabine.Name = "rdbtnKabine";
+            this.rdbtnKabine.Size = new System.Drawing.Size(58, 17);
+            this.rdbtnKabine.TabIndex = 1;
+            this.rdbtnKabine.Text = "Kabine";
+            this.rdbtnKabine.UseVisualStyleBackColor = true;
+            // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 582);
+            this.Controls.Add(this.grpbxProjection);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.grpbxRotating);
             this.Controls.Add(this.grpbxMovement);
@@ -326,6 +365,8 @@
             this.grpbxMovement.PerformLayout();
             this.grpbxRotating.ResumeLayout(false);
             this.grpbxRotating.PerformLayout();
+            this.grpbxProjection.ResumeLayout(false);
+            this.grpbxProjection.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -359,5 +400,8 @@
         private System.Windows.Forms.HScrollBar scrlbarRotateY;
         private System.Windows.Forms.HScrollBar scrlbarRotateX;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.GroupBox grpbxProjection;
+        private System.Windows.Forms.RadioButton rdbtnKabine;
+        private System.Windows.Forms.RadioButton rdbtnKavalie;
     }
 }

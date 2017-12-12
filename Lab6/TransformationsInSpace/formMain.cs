@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TransformationsInSpace
@@ -40,17 +35,14 @@ namespace TransformationsInSpace
 
             System.Drawing.Point invisible;
 
-            System.Drawing.Point[] pr;
             var points = _house.GetBox(50, panel1.Width / 2, panel1.Height / 2, out invisible, debug);
 
             var index = Array.IndexOf(points, invisible);
             label1.Text = index.ToString();
 
-            var i = 0;
-            foreach (var point in points)
+            for (int i = 0; i < debug.Count; i++)
             {
-                debug[i].Text = String.Format("X: {0} Y: {1} {2}", point.X, point.Y, debug[i].Text);
-                i++;
+                debug[i].Text = String.Format("X: {0} Y: {1} {2}", points[i].X, points[i].Y, debug[i].Text);
             }
 
             var planes = new List<List<int>>()
@@ -60,7 +52,10 @@ namespace TransformationsInSpace
                 new List<int>() {2, 3, 7, 6},
                 new List<int>() {0, 1, 3, 2},
                 new List<int>() {0, 1, 5, 4},
-                new List<int>() {1, 5, 7, 3}
+                new List<int>() {1, 5, 7, 3},
+
+                new List<int>() {0, 8, 9, 1},
+                new List<int>() {4, 8, 9, 5}
             };
 
             foreach (var plane in planes)
@@ -141,6 +136,16 @@ namespace TransformationsInSpace
         private void scrlbarScaling_ValueChanged(object sender, EventArgs e)
         {
             ProjectionTool.Scale(_house, scrlbarScaling.Value / 10.0);
+
+            panel1.Invalidate();
+        }
+
+        private void rdbtnKavalie_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdbtnKavalie.Checked)
+                _house.TypeOfProjection = ProjectionType.Kavalie;
+            else
+                _house.TypeOfProjection = ProjectionType.Kabine;
 
             panel1.Invalidate();
         }

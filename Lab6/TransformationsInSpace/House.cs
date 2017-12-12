@@ -2,6 +2,8 @@
 
 namespace TransformationsInSpace
 {
+    public enum ProjectionType { Kavalie = 2, Kabine = 1};
+
     class House
     {
         private Point[] _box = new Point[]
@@ -13,7 +15,10 @@ namespace TransformationsInSpace
             new Point(1, 0, 0),
             new Point(1, 0, 1),
             new Point(1, 1, 0),
-            new Point(1, 1, 1)
+            new Point(1, 1, 1),
+
+            new Point(0.5, -0.5, 0),
+            new Point(0.5, -0.5, 1)
         };
 
         public Point[] Box
@@ -28,13 +33,15 @@ namespace TransformationsInSpace
             }
         }
 
+        public ProjectionType TypeOfProjection = ProjectionType.Kavalie;
 
         public System.Drawing.Point[] GetBox(int scale, int centerX, int centerY, out System.Drawing.Point invisible, List<System.Windows.Forms.Label> debug)
         {           
             var points = ProjectionTool.ToArray(_box);
-            var projection = ProjectionTool.Projection(points, 1, 45);
+            var projection = ProjectionTool.Projection(points, (double)TypeOfProjection/2, 45);
 
-            int invisibleIndex = ProjectionTool.FindInvisible(points, scale, centerX, centerY, debug);
+            int invisibleIndex = ProjectionTool.FindInvisible(points, debug);
+            invisibleIndex = 0;
 
             switch (invisibleIndex)
             {
